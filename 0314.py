@@ -1,5 +1,7 @@
 import pygame
 import random
+from box import Box # 從 box檔案中載入Box class
+from player import Player
 
 screen_size = [700, 500]
 
@@ -10,60 +12,6 @@ RED = (255, 0, 0)
 s = 10
 score = 0
 score_c = 0
-
-class Player:
-    def __init__(self, x, y):
-        self.x = x
-        self.y = y
-        self.x2 = self.x + 5
-        self.y2 = self.y + 15
-
-    def draw(self):
-        pygame.draw.ellipse(screen, BLACK, [1 + self.x, self.y, 10, 10], 0)
-        
-        pygame.draw.line(screen, BLACK, [5 + self.x, 17 + self.y], [10 + self.x, 27 + self.y], 2)
-        pygame.draw.line(screen, BLACK, [5 + self.x, 17 + self.y], [self.x, 27 + self.y], 2)
-        
-        pygame.draw.line(screen, RED, [5 + self.x, 17 + self.y], [5 + self.x, 7 + self.y], 2)
-        
-        pygame.draw.line(screen, RED, [5 + self.x, 7 + self.y], [9 + self.x, 17 + self.y], 2)
-        pygame.draw.line(screen, RED, [5 + self.x, 7 + self.y], [1 + self.x, 17 + self.y], 2)
-
-
-    def move(self):
-        pos = pygame.mouse.get_pos()
-        self.y = pos[1]  
-        self.x2 = self.x + 5
-        self.y2 = self.y + 15
-
-
-class Box:
-    def __init__(self, x, y, speed):
-        self.x = x
-        self.y = y
-        self.w = random.randint(10, 100)
-        self.h = random.randint(10, 50)
-        self.x2 = self.x + self.w
-        self.y2 = self.y + self.h
-        self.speed = speed
-
-    def draw(self):
-        pygame.draw.rect(screen, BLACK, [self.x, self.y, self.w, self.h], 0)
-
-    def move(self):
-        self.x -= self.speed
-        self.x2 = self.x + self.w
-        self.y2 = self.y + self.h
-
-def calc_score(score):
-    return 'Score:' + str(score)
-
-def check(player, box):
-    top_left = player.x <= box.x <= player.x2 and player.y <= box.y <= player.y2
-    bottom_right = player.x <= box.x2 <= player.x2 and player.y <= box.y2 <= player.y2
-    if top_left or bottom_right:
-        return True
-    return False
 
 pygame.init()
 
