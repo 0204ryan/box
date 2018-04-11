@@ -1,25 +1,15 @@
 import pygame
-class Player:
+
+class Player(pygame.sprite.Sprite):
     def __init__(self, x, y):
+        super().__init__()
         self.x = x
         self.y = y
-        self.x2 = self.x + 5
-        self.y2 = self.y + 15
+        self.image = pygame.image.load('heli.png')
+        self.image = pygame.transform.scale(self.image, (60, 30))
+        self.rect = self.image.get_rect()
 
-    def draw(self, screen, black, red):
-        pygame.draw.ellipse(screen, black, [1 + self.x, self.y, 10, 10], 0)
-        
-        pygame.draw.line(screen, black, [5 + self.x, 17 + self.y], [10 + self.x, 27 + self.y], 2)
-        pygame.draw.line(screen, black, [5 + self.x, 17 + self.y], [self.x, 27 + self.y], 2)
-        
-        pygame.draw.line(screen, red, [5 + self.x, 17 + self.y], [5 + self.x, 7 + self.y], 2)
-        
-        pygame.draw.line(screen, red, [5 + self.x, 7 + self.y], [9 + self.x, 17 + self.y], 2)
-        pygame.draw.line(screen, red, [5 + self.x, 7 + self.y], [1 + self.x, 17 + self.y], 2)
-
-
-    def move(self):
+    def update(self):
         pos = pygame.mouse.get_pos()
         self.y = pos[1]  
-        self.x2 = self.x + 5
-        self.y2 = self.y + 15
+        self.rect.y = pos[1]

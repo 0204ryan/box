@@ -34,11 +34,15 @@ clock = pygame.time.Clock()
 pygame.mouse.set_visible(0)
 background_position = [0, 0]
 background_image = pygame.image.load("bg1.jpg").convert()
-boxes = pygame.sprite.Group()
+box_group = pygame.sprite.Group()
+player_group = pygame.sprite.Group()
 c = 0
 z = 0
 
 player = Player(0, 0)
+player_group.add(player)
+
+game_over = False
 
 while not done:
     # event 事件 (鍵盤敲擊, 滑鼠移動, 滑鼠按鍵..)
@@ -76,21 +80,29 @@ while not done:
     x = pos[0]
     y = pos[1]   
     if c > total:                                 
-        boxes.add(Box(700, y, 1 + z, BLACK))
-        boxes.add(Box(750, y, 1 + z, BLACK))
+        box_group.add(Box(700, y, 1 + z, BLACK))
+        box_group.add(Box(750, y, 1 + z, BLACK))
         z += 0.5
         c = 0    
 
-    boxes.update()
-    boxes.draw(screen)
+    if game_over:  
+        text = font.render("Game Over", True, WHITE)
+        text_rect = text.get_rect()
+        text_x = screen.get_width() / 2 - text_rect.width / 2
+        text_y = screen.get_height() / 2 - text_rect.height / 2
+        screen.blit(text, [text_x, text_y])
+    else:
+        box_group.update()
+        box_group.draw(screen)
 
-    player.move()
-    player.draw(screen, BLACK, RED)
+        player_group.update()
+        player_group.draw(screen)
 
-    # for box in boxes:
-    #     重疊 = check(player, box)
-    #     if 重疊: 
-    #         print('失敗')
+
+        if pygame.sprite.spritecollide(player, box_group, False):
+            print('碰撞')
+            game_over = True
+
 
     pygame.display.flip() 
     clock.tick(60)
