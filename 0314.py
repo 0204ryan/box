@@ -9,6 +9,18 @@ BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 GREEN = (0, 255, 0)
 RED = (255, 0, 0)
+
+def calc_score(score):
+    return 'Score:' + str(score)
+
+def check(player, box):
+    top_left = player.x <= box.x <= player.x2 and player.y <= box.y <= player.y2
+    bottom_right = player.x <= box.x2 <= player.x2 and player.y <= box.y2 <= player.y2
+    if top_left or bottom_right:
+        return True
+    return False
+
+
 s = 10
 score = 0
 score_c = 0
@@ -69,10 +81,10 @@ while not done:
         z += 0.5
         c = 0    
     for box in boxes:
-        box.draw()
+        box.draw(screen, BLACK)
         box.move()
     player.move()
-    player.draw()
+    player.draw(screen, BLACK, RED)
 
     for box in boxes:
         重疊 = check(player, box)
