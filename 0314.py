@@ -34,7 +34,7 @@ clock = pygame.time.Clock()
 pygame.mouse.set_visible(0)
 background_position = [0, 0]
 background_image = pygame.image.load("bg1.jpg").convert()
-boxes = []
+boxes = pygame.sprite.Group()
 c = 0
 z = 0
 
@@ -76,20 +76,21 @@ while not done:
     x = pos[0]
     y = pos[1]   
     if c > total:                                 
-        boxes.append(Box(700, y, 1 + z))
-        boxes.append(Box(750, y, 1 + z))
+        boxes.add(Box(700, y, 1 + z, BLACK))
+        boxes.add(Box(750, y, 1 + z, BLACK))
         z += 0.5
         c = 0    
-    for box in boxes:
-        box.draw(screen, BLACK)
-        box.move()
+
+    boxes.update()
+    boxes.draw(screen)
+
     player.move()
     player.draw(screen, BLACK, RED)
 
-    for box in boxes:
-        重疊 = check(player, box)
-        if 重疊: 
-            print('失敗')
+    # for box in boxes:
+    #     重疊 = check(player, box)
+    #     if 重疊: 
+    #         print('失敗')
 
     pygame.display.flip() 
     clock.tick(60)
