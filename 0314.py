@@ -32,7 +32,6 @@ class Player:
         self.y = pos[1]  
 
 
-
 class Box:
     def __init__(self, x, y, speed):
         self.x = x
