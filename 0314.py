@@ -39,7 +39,7 @@ player_group = pygame.sprite.Group()
 c = 0
 z = 0
 
-player = Player(0, 0)
+player = Player(20, screen_size[1]/2)
 player_group.add(player)
 
 game_over = False
@@ -47,6 +47,7 @@ game_over = False
 while not done:
     # event 事件 (鍵盤敲擊, 滑鼠移動, 滑鼠按鍵..)
     for event in pygame.event.get():
+        # print(event)
         if event.type == pygame.QUIT:
             done = True
         # 畫面重新調整大小
@@ -58,6 +59,12 @@ while not done:
             # 背景圖 放大
             screen.blit(pygame.transform.scale(background_image, screen_size), (0, 0))
             pygame.display.flip()
+
+
+    if pygame.mouse.get_pressed()[0]:
+        player.speed_y -= 0.35
+
+
 
 
     screen.blit(pygame.transform.scale(background_image, screen_size), (0, 0)) # 把背景圖畫出來

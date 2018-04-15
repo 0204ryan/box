@@ -8,8 +8,15 @@ class Player(pygame.sprite.Sprite):
         self.image = pygame.image.load('heli.png')
         self.image = pygame.transform.scale(self.image, (60, 30))
         self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
+        self.speed_y = 0
 
     def update(self):
-        pos = pygame.mouse.get_pos()
-        self.y = pos[1]  
-        self.rect.y = pos[1]
+        self.speed_y += 0.2
+        if self.rect.y >= 0:
+            self.rect.y += self.speed_y
+        else:
+            self.rect.y = 0
+        print(self.speed_y, self.rect.y)
+        
