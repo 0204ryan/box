@@ -13,7 +13,7 @@ class Box(pygame.sprite.Sprite):
         self.y = y
         self.w = random.randint(10, 100)
         self.h = random.randint(10, 50)
-        self.image = pygame.Surface((self.w, self.h))
+        self.image = pygame.Surface((self.w, self.h)) # 平面
         self.image.fill(color)
         self.rect = self.image.get_rect() # 取得長方形
         self.rect.x = self.x
