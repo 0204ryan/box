@@ -2,6 +2,7 @@ import pygame
 import random
 from box import Box
 from player import Player
+from save import save_score, read_score
 screen_size = [700, 500]
 
 BLACK = (0, 0, 0)
@@ -50,7 +51,14 @@ player_group.add(player)
 game_over = False
 done0 = False
 done = False
+
+max_score = read_score()
+
 music()
+
+
+save_done = False
+
 while not done0:
     # event 事件 (鍵盤敲擊, 滑鼠移動, 滑鼠按鍵..)
     for event in pygame.event.get():
@@ -71,7 +79,7 @@ while not done0:
 
     screen.blit(pygame.transform.scale(bg0, screen_size), (0, 0)) # 把背景圖畫出來
     font = pygame.font.Font('wt014.ttf', 100)
-    text = font.render("方塊戰爭", True, BLACK)
+    text = font.render("方塊戰爭", True, BLACK) 
     text_rect = text.get_rect()
     text_x = screen.get_width() / 2 - text_rect.width / 2
     text_y = screen.get_height() / 2 - text_rect.height / 2 - 120
@@ -158,6 +166,12 @@ while not done:
         text_x = screen.get_width() / 2 - text_rect.width / 2
         text_y = screen.get_height() / 2 - text_rect.height / 2
         screen.blit(text, [text_x, text_y])
+        
+        if not save_done:
+            if score > max_score:
+                save_score(score)
+                max_score = score
+                save_done = True
     else:
         box_group.update()
         box_group.draw(screen)
