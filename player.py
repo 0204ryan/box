@@ -11,5 +11,5 @@ class Player(pygame.sprite.Sprite):
 
     def update(self):
         pos = pygame.mouse.get_pos()
-        self.y = pos[1]  
+        self.y = pos[1]
         self.rect.y = pos[1]
