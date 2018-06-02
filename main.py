@@ -4,13 +4,11 @@ from box import Box
 from player import Player
 from save import save_score, read_score
 screen_size = [700, 500]
-
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 GREEN = (0, 255, 0)
 RED = (255, 0, 0)
-bg0 = pygame.image.load("bg0.jpg").convert()
-bg1 = pygame.image.load("bg1.jpg").convert()
+
 
 def music():
     pygame.mixer.music.load('piano.mp3')
@@ -32,7 +30,10 @@ def score_max(max_score):
 
 
 
-
+player = Player(0, 0)
+player_group.add(player)
+box_group = pygame.sprite.Group()
+player_group = pygame.sprite.Group()
 
 class Game:
     def __init__(self):
@@ -42,10 +43,6 @@ class Game:
         self.score = 0
         self.s = 10
         self.score_c = 0
-        self.box_group = pygame.sprite.Group()
-        self.player_group = pygame.sprite.Group()
-        self.player = Player(0, 0)
-        self.player_group.add(self.player)
 
         
     def process_events(self):
@@ -108,7 +105,7 @@ class Game:
         screen.blit(text, [0, 0])
        
 
-        if self.game_over:
+        if game_over:
             text = font.render("Game Over", True, WHITE)
             text_rect = text.get_rect()
             text_x = screen.get_width() / 2 - text_rect.width / 2
