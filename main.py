@@ -42,7 +42,7 @@ class Game:
         self.done = False
         self.intro_done = False # 開始畫面還沒結束!!!
         self.max_score = read_score()
-        asd = 0
+        self.asd = 0
         self.restart()
 
     def process_events(self):
@@ -71,9 +71,7 @@ class Game:
 
     def game_logic(self):
         if self.game_over:
-            # while asd == 100000:
-            #     asd += 1
-           self.restart()
+            self.restart()
 
         if not self.game_over:
             self.add_score()
@@ -139,6 +137,8 @@ class Game:
 
             if pygame.sprite.spritecollide(self.player, self.box_group, False):
                 self.game_over = True
+                while self.asd < 10000000000000:
+                    self.asd += 1
                 self.intro_done = False
 
         pygame.display.flip()
