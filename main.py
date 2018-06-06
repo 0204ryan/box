@@ -40,19 +40,10 @@ class Game:
         self.bg0 = pygame.image.load("bg0.jpg").convert()
         self.bg1 = pygame.image.load("bg1.jpg").convert()
         self.done = False
-        self.intro_done = False
-        self.game_over = False
-        self.save_done = False
+        self.intro_done = False # 開始畫面還沒結束!!!
         self.max_score = read_score()
-        self.score = 0
-        self.c = 0
-        self.z = 0
-        self.s = 10
-        self.score_c = 0
-        self.player_group = pygame.sprite.Group()
-        self.box_group = pygame.sprite.Group()
-        self.player = Player(0, 0)
-        self.player_group.add(self.player)
+        asd = 0
+        self.restart()
 
     def process_events(self):
         # event 事件 (鍵盤敲擊, 滑鼠移動, 滑鼠按鍵..)
@@ -79,33 +70,45 @@ class Game:
             self.score_c = 0
 
     def game_logic(self):
+        if self.game_over:
+            # while asd == 100000:
+            #     asd += 1
+           self.restart()
 
         if not self.game_over:
             self.add_score()
 
         self.c += 1
-
-        print(self.c, self.s, self.z)
-
         total = 200 - self.s
         if total > 50:
             self.s += 0.02
 
-        pos = pygame.mouse.get_pos()
         if self.c > total:
-            print('adding boxes')
             random_y_1 = random.randint(0, self.screen_size[1])
             random_y_2 = random.randint(0, self.screen_size[1])
             box1 = Box(self.screen_size[0], random_y_1, 1 + self.z, BLACK) # 產生箱子
             box2 = Box(self.screen_size[0], random_y_2, 1 + self.z, BLACK) # 產生箱子
-            while box1.rect.colliderect(box2.rect):
+            while box1.rect.colliderect(box2.rect): # 如果重疊，重新產生box2
                 random_y_2 = random.randint(0, self.screen_size[1])
                 box2 = Box(self.screen_size[0], random_y_2, 1 + self.z, BLACK) # 產生箱子
             self.box_group.add(box1)
             self.box_group.add(box2)
             self.z += 0.1
-            print(self.c, self.s, self.z)
             self.c = 0
+
+    def restart(self):
+        self.save_done = False
+        self.game_over = False
+        self.score = 0
+        self.c = 0
+        self.z = 0
+        self.s = 10
+        self.score_c = 0
+        self.player_group = pygame.sprite.Group()
+        self.box_group = pygame.sprite.Group()
+        self.player = Player(0, 0)
+        self.player_group.add(self.player)
+        asd = 0
 
     def display_frame(self):
         self.screen.blit(pygame.transform.scale(self.bg1, self.screen_size), (0, 0)) # 把背景圖畫出來
@@ -135,11 +138,10 @@ class Game:
             self.player_group.draw(self.screen)
 
             if pygame.sprite.spritecollide(self.player, self.box_group, False):
-                print('碰撞')
                 self.game_over = True
+                self.intro_done = False
 
         pygame.display.flip()
-        print('frame')
 
     def display_intro(self):
         self.screen.blit(pygame.transform.scale(self.bg0, self.screen_size), (0, 0)) # 把背景圖畫出來
@@ -170,7 +172,9 @@ class Game:
         for event in pygame.event.get():
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 pos = pygame.mouse.get_pos()
+
                 if b.collidepoint(pos):
+                    self.intro_done = True
                     break
 
         pygame.display.flip() 
@@ -193,8 +197,12 @@ def main():
 
         if g.done: 
             break
-        g.game_logic()
-        g.display_frame()
+
+        if g.intro_done == False:
+            g.display_intro()
+        else:
+            g.game_logic()
+            g.display_frame()
 
         clock.tick(60)
 
