@@ -70,8 +70,6 @@ class Game:
             self.score_c = 0
 
     def game_logic(self):
-        if self.game_over:
-            self.restart()
 
         if not self.game_over:
             self.add_score()
@@ -102,6 +100,7 @@ class Game:
         self.z = 0
         self.s = 10
         self.score_c = 0
+        self.ccccc = 0
         self.player_group = pygame.sprite.Group()
         self.box_group = pygame.sprite.Group()
         self.player = Player(0, 0)
@@ -111,7 +110,6 @@ class Game:
     def display_frame(self):
         self.screen.blit(pygame.transform.scale(self.bg1, self.screen_size), (0, 0)) # 把背景圖畫出來
         # screen.blit(background_image, background_position)
-        
         font = pygame.font.SysFont('Calibri', 25, True, False)
         text = font.render(calc_score(self.score), True, BLACK)
         self.screen.blit(text, [0, 0])
@@ -128,6 +126,11 @@ class Game:
                     save_score(self.score)
                     self.max_score = self.score
                     self.save_done = True
+
+            self.ccccc += 1
+            if self.ccccc > 180:
+                self.intro_done = False
+                self.restart()
         else:
             self.box_group.update()
             self.box_group.draw(self.screen)
@@ -137,9 +140,6 @@ class Game:
 
             if pygame.sprite.spritecollide(self.player, self.box_group, False):
                 self.game_over = True
-                while self.asd < 10000000000000:
-                    self.asd += 1
-                self.intro_done = False
 
         pygame.display.flip()
 
@@ -191,7 +191,7 @@ def main():
     background_position = [0, 0]
 
     music()
-    g = Game(screen, screen_size)
+    g = Game(screen, screen_size) # 做出一個Game class的物件
     while True:
         g.process_events()
 
