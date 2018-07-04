@@ -3,6 +3,7 @@ import random
 from box import Box
 from player import Player
 from save import save_score, read_score
+from heli import Heli
 
 screen_size = [700, 500]
 BLACK = (0, 0, 0)
@@ -140,6 +141,47 @@ class Game:
 
         pygame.display.flip()
 
+    def display_choose(self):
+        self.screen.blit(pygame.transform.scale(self.bg0, self.screen_size), (0, 0)) # 把背景圖畫出來
+        font = pygame.font.Font('wt014.ttf', 60)
+        text = font.render("選擇玩家", True, BLACK) 
+        text_rect = text.get_rect()
+        text_x = self.screen.get_width() / 2 - text_rect.width / 2
+        text_y = self.screen.get_height() / 2 - text_rect.height / 2 - 120
+        self.screen.blit(text, [text_x, text_y])
+
+        # 顯示圖片
+        h0 = Heli(200, 200, 'ZF2.png')
+        self.screen.blit(h0.image, h0.rect)
+
+        button = pygame.Surface((200, 70)) # 按鈕
+        button.fill(RED)
+        button_rect = button.get_rect() # 取得這個按鈕的長方形
+
+        button_x = self.screen.get_width() / 2 - button_rect.width / 2
+        button_y = self.screen.get_height() / 2 - button_rect.height / 2 + 100
+        b = self.screen.blit(button, [button_x, button_y])
+        
+        font2 = pygame.font.Font('wt014.ttf', 30)
+        text2 = font2.render("確認", True, BLACK)
+        text2_rect = text2.get_rect()
+        text2_x = self.screen.get_width() / 2 - text2_rect.width / 2
+        text2_y = self.screen.get_height() / 2 - text2_rect.height / 2 + 100
+        self.screen.blit(text2, [text2_x, text2_y])
+        font3 = pygame.font.SysFont('Calibri', 30, True, False)
+        text3 = font3.render(score_max(self.max_score), True, BLACK)
+        self.screen.blit(text3, [0, 0])
+        for event in pygame.event.get():
+            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                pos = pygame.mouse.get_pos()
+
+                if b.collidepoint(pos):
+                    self.intro_done = True
+                    self.restart()
+                    break
+
+        pygame.display.flip()
+
     def display_game_over(self):
         self.screen.blit(pygame.transform.scale(self.bg0, self.screen_size), (0, 0)) # 把背景圖畫出來
         font = pygame.font.Font('wt014.ttf', 60)
@@ -233,7 +275,7 @@ def main():
             break
 
         if g.intro_done == False:
-            g.display_intro()
+            g.display_choose()
         elif g.game_over:
             g.display_game_over()
         else:
