@@ -127,12 +127,9 @@ class Game:
                     self.max_score = self.score
                     self.save_done = True
 
-            self.ccccc += 1
-            if self.ccccc > 180:
-                self.intro_done = False
-                self.restart()
         else:
             self.box_group.update()
+
             self.box_group.draw(self.screen)
 
             self.player_group.update()
@@ -140,6 +137,43 @@ class Game:
 
             if pygame.sprite.spritecollide(self.player, self.box_group, False):
                 self.game_over = True
+
+        pygame.display.flip()
+
+    def display_game_over(self):
+        self.screen.blit(pygame.transform.scale(self.bg0, self.screen_size), (0, 0)) # 把背景圖畫出來
+        font = pygame.font.Font('wt014.ttf', 60)
+        text = font.render("遊戲結束", True, BLACK) 
+        text_rect = text.get_rect()
+        text_x = self.screen.get_width() / 2 - text_rect.width / 2
+        text_y = self.screen.get_height() / 2 - text_rect.height / 2 - 120
+        self.screen.blit(text, [text_x, text_y])
+
+        button = pygame.Surface((200, 70)) # 按鈕
+        button.fill(RED)
+        button_rect = button.get_rect() # 取得這個按鈕的長方形
+
+        button_x = self.screen.get_width() / 2 - button_rect.width / 2
+        button_y = self.screen.get_height() / 2 - button_rect.height / 2 + 100
+        b = self.screen.blit(button, [button_x, button_y])
+        
+        font2 = pygame.font.Font('wt014.ttf', 30)
+        text2 = font2.render("重新開始", True, BLACK)
+        text2_rect = text2.get_rect()
+        text2_x = self.screen.get_width() / 2 - text2_rect.width / 2
+        text2_y = self.screen.get_height() / 2 - text2_rect.height / 2 + 100
+        self.screen.blit(text2, [text2_x, text2_y])
+        font3 = pygame.font.SysFont('Calibri', 30, True, False)
+        text3 = font3.render(score_max(self.max_score), True, BLACK)
+        self.screen.blit(text3, [0, 0])
+        for event in pygame.event.get():
+            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                pos = pygame.mouse.get_pos()
+
+                if b.collidepoint(pos):
+                    self.intro_done = True
+                    self.restart()
+                    break
 
         pygame.display.flip()
 
@@ -185,7 +219,7 @@ def main():
     pygame.init()
 
     screen = pygame.display.set_mode(screen_size, pygame.HWSURFACE | pygame.DOUBLEBUF | pygame.RESIZABLE)
-    pygame.display.set_caption("My Game")
+    pygame.display.set_caption("方塊戰爭")
     clock = pygame.time.Clock()
     pygame.mouse.set_visible(True)
     background_position = [0, 0]
@@ -200,6 +234,8 @@ def main():
 
         if g.intro_done == False:
             g.display_intro()
+        elif g.game_over:
+            g.display_game_over()
         else:
             g.game_logic()
             g.display_frame()
