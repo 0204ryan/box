@@ -39,8 +39,8 @@ class Game:
         self.screen_size = screen_size
         self.bg0 = pygame.image.load("images/bg0.jpg").convert()
         self.bg1 = pygame.image.load("images/bg1.jpg").convert()
+        self.state = 'intro'
         self.done = False
-        self.intro_done = False # 開始畫面還沒結束!!!
         self.max_score = read_score()
         self.asd = 0
         self.player_image = 'images/ZF0.png'
@@ -62,7 +62,7 @@ class Game:
                 pygame.display.flip()
             if event.type == pygame.KEYDOWN: # enter
                 if event.key == pygame.K_RETURN:
-                    self.intro_done = True
+                    self.state = 'play'
 
     def add_score(self):
         self.score_c += 1
@@ -138,6 +138,7 @@ class Game:
 
             if pygame.sprite.spritecollide(self.player, self.box_group, False):
                 self.game_over = True
+                self.state = 'game_over'
 
         pygame.display.flip()
 
@@ -185,7 +186,7 @@ class Game:
                 pos = pygame.mouse.get_pos()
 
                 if b.collidepoint(pos):
-                    self.intro_done = True
+                    self.state = 'intro'
                     self.restart()
                     break
 
@@ -228,7 +229,7 @@ class Game:
                 pos = pygame.mouse.get_pos()
 
                 if b.collidepoint(pos):
-                    self.intro_done = True
+                    self.state = 'play'
                     self.restart()
                     break
 
@@ -243,53 +244,46 @@ class Game:
         text_y = self.screen.get_height() / 2 - text_rect.height / 2 - 120
         self.screen.blit(text, [text_x, text_y])
 
+        # 顯示最高分數
+        font3 = pygame.font.SysFont('Calibri', 30, True, False)
+        text3 = font3.render(score_max(self.max_score), True, BLACK)
+        self.screen.blit(text3, [0, 0])
+
+        # 開始遊戲 按鈕
         button = pygame.Surface((200, 70)) # 按鈕
         button.fill(RED)
         button_rect = button.get_rect() # 取得這個按鈕的長方形
-
         button_x = self.screen.get_width() / 2 - button_rect.width / 2
         button_y = self.screen.get_height() / 2 - button_rect.height / 2 + 100
-        b = self.screen.blit(button, [button_x, button_y])
+        start_btn = self.screen.blit(button, [button_x, button_y])
         
-        button = pygame.Surface((200, 70)) # 按鈕
-        button.fill(RED)
-        button_rect = button.get_rect() # 取得這個按鈕的長方形
-        button_x = self.screen.get_width() / 2 - button_rect.width / 2
-        button_y = self.screen.get_height() / 2 - button_rect.height / 2 + 200
-        b = self.screen.blit(button, [button_x, button_y])
-
         font2 = pygame.font.Font('wt014.ttf', 30)
         text2 = font2.render("開始遊戲", True, BLACK)
         text2_rect = text2.get_rect()
         text2_x = self.screen.get_width() / 2 - text2_rect.width / 2
         text2_y = self.screen.get_height() / 2 - text2_rect.height / 2 + 100
         self.screen.blit(text2, [text2_x, text2_y])
-        font3 = pygame.font.SysFont('Calibri', 30, True, False)
-        text3 = font3.render(score_max(self.max_score), True, BLACK)
-        self.screen.blit(text3, [0, 0])
-        
+
+        # 選擇直升機 按鈕
         button = pygame.Surface((200, 70)) # 按鈕
         button.fill(RED)
         button_rect = button.get_rect() # 取得這個按鈕的長方形
         button_x = self.screen.get_width() / 2 - button_rect.width / 2
-        button_y = self.screen.get_height() / 2 - button_rect.height / 2 + 200
-        b = self.screen.blit(button, [button_x, button_y])
+        button_y = self.screen.get_height() / 2 - button_rect.height / 2 + 180
+        choose_btn = self.screen.blit(button, [button_x, button_y])
         
-        font2 = pygame.font.Font('wt014.ttf', 30)
         text2 = font2.render("選擇直升機", True, BLACK)
         text2_rect = text2.get_rect()
         text2_x = self.screen.get_width() / 2 - text2_rect.width / 2
-        text2_y = self.screen.get_height() / 2 - text2_rect.height / 2 + 200
+        text2_y = self.screen.get_height() / 2 - text2_rect.height / 2 + 180
         self.screen.blit(text2, [text2_x, text2_y])
-        font3 = pygame.font.SysFont('Calibri', 30, True, False)
-        text3 = font3.render(score_max(self.max_score), True, BLACK)
-        self.screen.blit(text3, [0, 0])
+
         for event in pygame.event.get():
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 pos = pygame.mouse.get_pos()
 
-                if b.collidepoint(pos):
-                    self.intro_done = True
+                if start_btn.collidepoint(pos):
+                    self.state = 'play'
                     break
 
         pygame.display.flip() 
@@ -313,14 +307,13 @@ def main():
         if g.done: 
             break
 
-        if g.intro_done == False:
-
+        if g.state == 'intro':
             g.display_intro()
-            # g.display_choose()
-            
-        elif g.game_over:
+        elif g.state == 'choose':
+            g.display_choose()
+        elif g.state == 'game_over':
             g.display_game_over()
-        else:
+        elif g.state == 'play':
             g.game_logic()
             g.display_frame()
 
