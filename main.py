@@ -33,17 +33,17 @@ def check(player, box):
 def score_max(max_score):
     return 'Max Score:' + str(max_score)
 
-
 class Game:
     def __init__(self, screen, screen_size):
         self.screen = screen
         self.screen_size = screen_size
-        self.bg0 = pygame.image.load("bg0.jpg").convert()
-        self.bg1 = pygame.image.load("bg1.jpg").convert()
+        self.bg0 = pygame.image.load("images/bg0.jpg").convert()
+        self.bg1 = pygame.image.load("images/bg1.jpg").convert()
         self.done = False
         self.intro_done = False # 開始畫面還沒結束!!!
         self.max_score = read_score()
         self.asd = 0
+        self.player_image = 'images/ZF0.png'
         self.restart()
 
     def process_events(self):
@@ -104,9 +104,9 @@ class Game:
         self.ccccc = 0
         self.player_group = pygame.sprite.Group()
         self.box_group = pygame.sprite.Group()
-        self.player = Player(0, 0)
+        self.player = Player(0, 0, self.player_image)
         self.player_group.add(self.player)
-        asd = 0
+   
 
     def display_frame(self):
         self.screen.blit(pygame.transform.scale(self.bg1, self.screen_size), (0, 0)) # 把背景圖畫出來
@@ -150,9 +150,16 @@ class Game:
         text_y = self.screen.get_height() / 2 - text_rect.height / 2 - 120
         self.screen.blit(text, [text_x, text_y])
 
-        # 顯示圖片
-        h0 = Heli(200, 200, 'ZF2.png')
-        self.screen.blit(h0.image, h0.rect)
+        images = ['images/ZF0.png', 'images/ZF1.png', 'images/ZF2.png', 'images/ZF3.png', 'images/ZF4.png']
+        hs = []
+
+        for i in range(5):
+            h0 = Heli(i * self.screen.get_width() / 5, 200, images[i])
+            h = self.screen.blit(h0.image, h0.rect)
+            hs.append([h, images[i]])
+
+
+
 
         button = pygame.Surface((200, 70)) # 按鈕
         button.fill(RED)
@@ -171,6 +178,8 @@ class Game:
         font3 = pygame.font.SysFont('Calibri', 30, True, False)
         text3 = font3.render(score_max(self.max_score), True, BLACK)
         self.screen.blit(text3, [0, 0])
+
+        # 判斷滑鼠點擊哪裡
         for event in pygame.event.get():
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 pos = pygame.mouse.get_pos()
@@ -179,6 +188,12 @@ class Game:
                     self.intro_done = True
                     self.restart()
                     break
+
+                for h in hs:
+                    if h[0].collidepoint(pos):
+                        self.player_image = h[1]
+
+
 
         pygame.display.flip()
 

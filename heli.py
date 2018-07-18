@@ -5,7 +5,7 @@ class Heli(pygame.sprite.Sprite):
         self.x = x
         self.y = y
         self.image = pygame.image.load(image_file)
-        self.image = pygame.transform.scale(self.image, (240, 100))
+        self.image = pygame.transform.scale(self.image, (120, 50))
         self.rect = self.image.get_rect()
         self.rect.x = self.x
         self.rect.y = self.y
@@ -15,3 +15,4 @@ class Heli(pygame.sprite.Sprite):
         pos = pygame.mouse.get_pos()
         self.y = pos[1]
         self.rect.y = pos[1]
+        
