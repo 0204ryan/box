@@ -251,11 +251,35 @@ class Game:
         button_y = self.screen.get_height() / 2 - button_rect.height / 2 + 100
         b = self.screen.blit(button, [button_x, button_y])
         
+        button = pygame.Surface((200, 70)) # 按鈕
+        button.fill(RED)
+        button_rect = button.get_rect() # 取得這個按鈕的長方形
+        button_x = self.screen.get_width() / 2 - button_rect.width / 2
+        button_y = self.screen.get_height() / 2 - button_rect.height / 2 + 200
+        b = self.screen.blit(button, [button_x, button_y])
+
         font2 = pygame.font.Font('wt014.ttf', 30)
         text2 = font2.render("開始遊戲", True, BLACK)
         text2_rect = text2.get_rect()
         text2_x = self.screen.get_width() / 2 - text2_rect.width / 2
         text2_y = self.screen.get_height() / 2 - text2_rect.height / 2 + 100
+        self.screen.blit(text2, [text2_x, text2_y])
+        font3 = pygame.font.SysFont('Calibri', 30, True, False)
+        text3 = font3.render(score_max(self.max_score), True, BLACK)
+        self.screen.blit(text3, [0, 0])
+        
+        button = pygame.Surface((200, 70)) # 按鈕
+        button.fill(RED)
+        button_rect = button.get_rect() # 取得這個按鈕的長方形
+        button_x = self.screen.get_width() / 2 - button_rect.width / 2
+        button_y = self.screen.get_height() / 2 - button_rect.height / 2 + 200
+        b = self.screen.blit(button, [button_x, button_y])
+        
+        font2 = pygame.font.Font('wt014.ttf', 30)
+        text2 = font2.render("選擇直升機", True, BLACK)
+        text2_rect = text2.get_rect()
+        text2_x = self.screen.get_width() / 2 - text2_rect.width / 2
+        text2_y = self.screen.get_height() / 2 - text2_rect.height / 2 + 200
         self.screen.blit(text2, [text2_x, text2_y])
         font3 = pygame.font.SysFont('Calibri', 30, True, False)
         text3 = font3.render(score_max(self.max_score), True, BLACK)
@@ -290,7 +314,10 @@ def main():
             break
 
         if g.intro_done == False:
-            g.display_choose()
+
+            g.display_intro()
+            # g.display_choose()
+            
         elif g.game_over:
             g.display_game_over()
         else:
