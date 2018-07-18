@@ -285,6 +285,9 @@ class Game:
                 if start_btn.collidepoint(pos):
                     self.state = 'play'
                     break
+                if choose_btn.collidepoint(pos):
+                    self.state = 'choose'
+                    break
 
         pygame.display.flip() 
 
