@@ -78,16 +78,17 @@ class Game:
         self.c += 1
         total = 200 - self.s
         if total > 50:
-            self.s += 0.02
+            self.s += self.s_accelerate
+            self.s_accelerate += 0.005
 
         if self.c > total:
             random_y_1 = random.randint(0, self.screen_size[1])
             random_y_2 = random.randint(0, self.screen_size[1])
-            box1 = Box(self.screen_size[0], random_y_1, 1 + self.z, BLACK) # 產生箱子
-            box2 = Box(self.screen_size[0], random_y_2, 1 + self.z, BLACK) # 產生箱子
+            box1 = Box(self.screen_size[0], random_y_1, 2 + self.z, BLACK) # 產生箱子
+            box2 = Box(self.screen_size[0], random_y_2, 2 + self.z, BLACK) # 產生箱子
             while box1.rect.colliderect(box2.rect): # 如果重疊，重新產生box2
                 random_y_2 = random.randint(0, self.screen_size[1])
-                box2 = Box(self.screen_size[0], random_y_2, 1 + self.z, BLACK) # 產生箱子
+                box2 = Box(self.screen_size[0], random_y_2, 2 + self.z, BLACK) # 產生箱子
             self.box_group.add(box1)
             self.box_group.add(box2)
             self.z += 0.1
@@ -101,11 +102,13 @@ class Game:
         self.z = 0
         self.s = 10
         self.score_c = 0
+        self.s_accelerate = 0.01
         self.ccccc = 0
         self.player_group = pygame.sprite.Group()
         self.box_group = pygame.sprite.Group()
         self.player = Player(0, 0, self.player_image)
         self.player_group.add(self.player)
+
    
 
     def display_frame(self):
@@ -127,7 +130,6 @@ class Game:
                     save_score(self.score)
                     self.max_score = self.score
                     self.save_done = True
-
         else:
             self.box_group.update()
 

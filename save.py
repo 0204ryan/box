@@ -12,7 +12,7 @@ def read_score():
 
 # write
 def save_score(score):
-    print('saving game')
     with open('123.txt', 'w') as f:
         f.write(str(score))
+        return max_score
 
