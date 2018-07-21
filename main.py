@@ -58,35 +58,18 @@ class Game:
                 if event.key == pygame.K_RETURN:
                     self.state = 'play'
 
-    def add_score(self):
-        self.score_c += 1
-        if self.score_c > 20:
-            self.score += 1
-            self.score_c = 0
-
     def game_logic(self):
-
-        if not self.game_over:
-            self.add_score()
-
-        self.c += 1
-        total = 200 - self.s
-        if total > 50:
-            self.s += self.s_accelerate
-            self.s_accelerate += 0.01
-
-        if self.c > total:
+        if self.s == 0:
+            self.s = random.randint(11, 20)
+        self.a += 1
+        if self.a > self.s:
             random_y_1 = random.randint(0, self.screen_size[1])
-            random_y_2 = random.randint(0, self.screen_size[1])
             box1 = Box(self.screen_size[0], random_y_1, 2 + self.z, BLACK)
-            box2 = Box(self.screen_size[0], random_y_2, 2 + self.z, BLACK)
-            while box1.rect.colliderect(box2.rect):
-                random_y_2 = random.randint(0, self.screen_size[1])
-                box2 = Box(self.screen_size[0], random_y_2, 2 + self.z, BLACK)
             self.box_group.add(box1)
-            self.box_group.add(box2)
             self.z += 0.1
             self.c = 0
+            self.a = 0
+            self.s = 0
 
     def restart(self):
         self.save_done = False
@@ -94,9 +77,10 @@ class Game:
         self.score = 0
         self.c = 0
         self.z = 0
-        self.s = 10
+        self.s = 0
+        self.a = 0
         self.score_c = 0
-        self.s_accelerate = 0.01
+        self.s_accelerate = 0.1
         self.ccccc = 0
         self.player_group = pygame.sprite.Group()
         self.box_group = pygame.sprite.Group()
@@ -110,6 +94,10 @@ class Game:
         font = pygame.font.SysFont('Calibri', 25, True, False)
         text = font.render(calc_score(self.score), True, BLACK)
         self.screen.blit(text, [0, 0])
+        self.score_c += 1
+        if self.score_c > 20:
+            self.score += 1
+            self.score_c = 0
 
 
             
