@@ -14,5 +14,4 @@ def read_score():
 def save_score(score):
     with open('123.txt', 'w') as f:
         f.write(str(score))
-        return max_score
-
+        return score
