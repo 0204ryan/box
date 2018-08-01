@@ -5,7 +5,7 @@ from player import Player
 from save import save_score, read_score
 from heli import Heli
 
-screen_size = [700, 500]
+screen_size = [1000, 700]
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 GREEN = (0, 255, 0)
@@ -42,7 +42,7 @@ class Game:
         self.done = False
         self.max_score = read_score()
         self.asd = 0
-        self.player_image = 'images/ZF0.png'
+        self.player_image = 'helis/ZF0.png'
         self.restart()
 
     def process_events(self):
@@ -64,7 +64,7 @@ class Game:
         self.a += 1
         if self.a > self.s:
             random_y_1 = random.randint(0, self.screen_size[1])
-            box1 = Box(self.screen_size[0], random_y_1, 2 + self.z, BLACK)
+            box1 = Box(self.screen_size[0], random_y_1, 1 + self.z, BLACK)
             self.box_group.add(box1)
             self.z += 0.1
             self.c = 0
@@ -84,7 +84,7 @@ class Game:
         self.ccccc = 0
         self.player_group = pygame.sprite.Group()
         self.box_group = pygame.sprite.Group()
-        self.player = Player(0, 0, self.player_image)
+        self.player = Player(0, 0, self.player_image, self.screen)
         self.player_group.add(self.player)
 
    
@@ -108,7 +108,13 @@ class Game:
 
             self.player_group.update()
             self.player_group.draw(self.screen)
+            pos = pygame.mouse.get_pos()
+            print(self.player.y, pos)
+            if self.player.y <= 0:
+                print('too high')
 
+            if self.player.y >= screen_size[1]:
+                print('too low')
             if pygame.sprite.spritecollide(self.player, self.box_group, False):
                 self.game_over = True
                 self.state = 'game_over'
@@ -124,11 +130,13 @@ class Game:
         text_y = self.screen.get_height() / 2 - text_rect.height / 2 - 120
         self.screen.blit(text, [text_x, text_y])
 
-        images = ['images/ZF0.png', 'images/ZF1.png', 'images/ZF2.png', 'images/ZF3.png', 'images/ZF4.png']
+        images = ['helis/ZF0.png', 'helis/ZF1.png', 'helis/ZF2.png', 'helis/ZF3.png', 'helis/ZF4.png', 
+        'helis/ZF5.png', 
+        'helis/ZF6.png', 'helis/ZF7.png', 'helis/ZF8.png', 'helis/ZF9.png']
         hs = []
 
-        for i in range(5):
-            h0 = Heli(i * self.screen.get_width() / 5, self.screen.get_height() / 2, images[i])
+        for i in range(10):
+            h0 = Heli(i * self.screen.get_width() / 10, self.screen.get_height() / 2, images[i])
             h = self.screen.blit(h0.image, h0.rect)
             hs.append([h, images[i]])
 
