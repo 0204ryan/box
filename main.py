@@ -2,7 +2,7 @@ import pygame
 import random
 from box import Box
 from player import Player
-from save import save_score, read_score
+from save import Db
 from heli import Heli
 
 screen_size = [1000, 700]
@@ -40,7 +40,8 @@ class Game:
         self.background = pygame.image.load("images/background.jpg").convert()
         self.state = 'intro'
         self.done = False
-        self.max_score = read_score()
+        self.db = Db()
+        self.max_score = self.db.read_score()
         self.asd = 0
         self.player_image = 'helis/ZF0.png'
         self.restart()
@@ -113,7 +114,7 @@ class Game:
             if pygame.sprite.spritecollide(self.player, self.box_group, False):
                 self.game_over = True
                 self.state = 'game_over'
-
+  
         pygame.display.flip()
 
     def display_choose(self):
@@ -197,7 +198,7 @@ class Game:
         self.screen.blit(text3, [0, 0])
         if not self.save_done:
                 if self.score > self.max_score:
-                    save_score(self.score)
+                    self.db.save_score(self.score)
                     self.max_score = self.score
                     self.save_done = True
 
