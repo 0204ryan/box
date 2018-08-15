@@ -109,12 +109,7 @@ class Game:
             self.player_group.update()
             self.player_group.draw(self.screen)
             pos = pygame.mouse.get_pos()
-            print(self.player.y, pos)
-            if self.player.y <= 0:
-                print('too high')
 
-            if self.player.y >= screen_size[1]:
-                print('too low')
             if pygame.sprite.spritecollide(self.player, self.box_group, False):
                 self.game_over = True
                 self.state = 'game_over'
@@ -131,8 +126,7 @@ class Game:
         self.screen.blit(text, [text_x, text_y])
 
         images = ['helis/ZF0.png', 'helis/ZF1.png', 'helis/ZF2.png', 'helis/ZF3.png', 'helis/ZF4.png', 
-        'helis/ZF5.png', 
-        'helis/ZF6.png', 'helis/ZF7.png', 'helis/ZF8.png', 'helis/ZF9.png']
+        'helis/ZF5.png', 'helis/ZF6.png', 'helis/ZF7.png', 'helis/ZF8.png', 'helis/ZF9.png']
         hs = []
 
         for i in range(10):
