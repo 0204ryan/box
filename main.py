@@ -4,6 +4,7 @@ from box import Box
 from player import Player
 from save import Db
 from heli import Heli
+from pygame.locals import *
 
 screen_size = [1000, 700]
 BLACK = (0, 0, 0)
@@ -37,13 +38,15 @@ class Game:
     def __init__(self, screen, screen_size):
         self.screen = screen
         self.screen_size = screen_size
-        self.background = pygame.image.load("images/background.jpg").convert()
-        self.state = 'intro'
+        self.background_sign_in = pygame.image.load("images/background.jpg").convert()
+        self.background_game = pygame.image.load("images/background.jpg").convert()
+        self.state = 'sign'
         self.done = False
         self.db = Db()
         self.max_score = self.db.read_score()
         self.asd = 0
         self.player_image = 'helis/ZF0.png'
+        self.input_id = ''
         self.restart()
 
     def process_events(self):
@@ -53,15 +56,73 @@ class Game:
             if event.type == pygame.VIDEORESIZE:
                 self.screen_size = (event.w, event.h)
                 surface = pygame.display.set_mode(self.screen_size, pygame.HWSURFACE | pygame.DOUBLEBUF | pygame.RESIZABLE)
-                self.screen.blit(pygame.transform.scale(self.background, self.screen_size), (0, 0))
+                if self.state == 'sign':
+                    self.screen.blit(pygame.transform.scale(self.background_sign_in, self.screen_size), (0, 0))
+                else:
+                    self.screen.blit(pygame.transform.scale(self.background_game, self.screen_size), (0, 0))
                 pygame.display.flip()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RETURN:
                     self.state = 'play'
 
+
+    def display_sign_in(self):
+        self.screen.blit(pygame.transform.scale(self.background_sign_in, self.screen_size), (0, 0))
+
+        for event in pygame.event.get():
+            if event.type == pygame.KEYDOWN:
+                if event.key == K_BACKSPACE:
+                    self.input_id = self.input_id[:-1]
+                else:
+                    self.input_id += event.unicode
+                
+
+
+        font = pygame.font.Font('wt014.ttf', 30)
+        text_input_id = font.render(self.input_id, True, (255,255,255))
+        self.screen.blit(text_input_id, (100,100))
+
+
+        button = pygame.Surface((200, 70))
+        button.fill(RED)
+        button_rect = button.get_rect()
+        button_x = self.screen.get_width() / 2 - button_rect.width / 2
+        button_y = self.screen.get_height() / 2 - button_rect.height / 2 + 100
+        start_btn = self.screen.blit(button, [button_x, button_y])
+
+        text = font.render("登入", True, BLACK) 
+        text_rect = text.get_rect()
+        text_x = self.screen.get_width() / 2 - text_rect.width / 2
+        text_y = self.screen.get_height() / 2 - text_rect.height / 2 + 100
+        self.screen.blit(text, [text_x, text_y])
+        
+      
+        button = pygame.Surface((200, 70))
+        button.fill(RED)
+        button_rect = button.get_rect()
+        button_x = self.screen.get_width() / 2 - button_rect.width / 2
+        button_y = self.screen.get_height() / 2 - button_rect.height / 2 + 180
+        start_btn = self.screen.blit(button, [button_x, button_y])
+
+        text2 = font.render("註冊", True, BLACK)
+        text2_rect = text2.get_rect()
+        text2_x = self.screen.get_width() / 2 - text2_rect.width / 2
+        text2_y = self.screen.get_height() / 2 - text2_rect.height / 2 + 180
+        self.screen.blit(text2, [text2_x, text2_y])
+
+        for event in pygame.event.get():
+            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                pos = pygame.mouse.get_pos()
+
+                if start_btn.collidepoint(pos):
+                    self.state = 'intro'
+                    break
+        pygame.display.flip()
+
+
     def game_logic(self):
-        if self.s == 0:
-            self.s = random.randint(11, 20)
+        if self.a == 0:
+            self.s += 50
         self.a += 1
         if self.a > self.s:
             random_y_1 = random.randint(0, self.screen_size[1])
@@ -70,7 +131,7 @@ class Game:
             self.z += 0.1
             self.c = 0
             self.a = 0
-            self.s = 0
+            self.s -= 49
 
     def restart(self):
         self.save_done = False
@@ -91,7 +152,7 @@ class Game:
    
 
     def display_frame(self):
-        self.screen.blit(pygame.transform.scale(self.background, self.screen_size), (0, 0))
+        self.screen.blit(pygame.transform.scale(self.background_game, self.screen_size), (0, 0))
         font = pygame.font.SysFont('Calibri', 25, True, False)
         text = font.render(calc_score(self.score), True, BLACK)
         self.screen.blit(text, [0, 0])
@@ -118,7 +179,7 @@ class Game:
         pygame.display.flip()
 
     def display_choose(self):
-        self.screen.blit(pygame.transform.scale(self.background, self.screen_size), (0, 0))
+        self.screen.blit(pygame.transform.scale(self.background_game, self.screen_size), (0, 0))
         font = pygame.font.Font('wt014.ttf', 60)
         text = font.render("選擇玩家", True, BLACK) 
         text_rect = text.get_rect()
@@ -171,7 +232,7 @@ class Game:
         pygame.display.flip()
 
     def display_game_over(self):
-        self.screen.blit(pygame.transform.scale(self.background, self.screen_size), (0, 0))
+        self.screen.blit(pygame.transform.scale(self.background_game, self.screen_size), (0, 0))
         font = pygame.font.Font('wt014.ttf', 60)
         text = font.render("遊戲結束", True, BLACK) 
         text_rect = text.get_rect()
@@ -214,7 +275,7 @@ class Game:
         pygame.display.flip()
 
     def display_intro(self):
-        self.screen.blit(pygame.transform.scale(self.background, self.screen_size), (0, 0))
+        self.screen.blit(pygame.transform.scale(self.background_game, self.screen_size), (0, 0))
         font = pygame.font.Font('wt014.ttf', 100)
         text = font.render("方塊戰爭", True, BLACK) 
         text_rect = text.get_rect()
@@ -285,15 +346,16 @@ def main():
         if g.done: 
             break
 
-        if g.state == 'intro':
-            g.display_intro()
-        elif g.state == 'choose':
-            g.display_choose()
-        elif g.state == 'game_over':
-            g.display_game_over()
-        elif g.state == 'play':
-            g.game_logic()
-            g.display_frame()
+        g.display_sign_in()
+        # if g.state == 'intro':
+        #     g.display_intro()
+        # elif g.state == 'choose':
+        #     g.display_choose()
+        # elif g.state == 'game_over':
+        #     g.display_game_over()
+        # elif g.state == 'play':
+        #     g.game_logic()
+        #     g.display_frame()
 
         clock.tick(60)
 
