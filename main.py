@@ -40,13 +40,16 @@ class Game:
         self.screen_size = screen_size
         self.background_sign_in = pygame.image.load("images/background.jpg").convert()
         self.background_game = pygame.image.load("images/background.jpg").convert()
-        self.state = 'sign'
+        self.state = 'signin'
         self.done = False
         self.db = Db()
         self.max_score = self.db.read_score()
         self.asd = 0
         self.player_image = 'helis/ZF0.png'
         self.input_id = ''
+        self.input_pwd = ''
+        self.input_idpwd = 'id'
+        # self.user_id = 'Ryan'
         self.restart()
 
     def process_events(self):
@@ -72,23 +75,51 @@ class Game:
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
                 if event.key == K_BACKSPACE:
-                    self.input_id = self.input_id[:-1]
+                    if self.input_idpwd == 'id':
+                        self.input_id = self.input_id[:-1]    
+                    else:
+                        self.input_pwd = self.input_pwd[:-1]
                 else:
-                    self.input_id += event.unicode
+                    if self.input_idpwd == 'id':
+                        if len(self.input_id) < 8:
+                            self.input_id += event.unicode
+                    else:
+                        if len(self.input_pwd) < 8:
+                            self.input_pwd += event.unicode
+  
                 
-
-
         font = pygame.font.Font('wt014.ttf', 30)
-        text_input_id = font.render(self.input_id, True, (255,255,255))
-        self.screen.blit(text_input_id, (100,100))
+
+        # 帳號密碼
+        text = font.render("帳號:", True, BLACK) 
+        text_rect = text.get_rect()
+        id_x = self.screen.get_width() / 2 - text_rect.width / 2 - 100
+        id_y = self.screen.get_height() / 2 - text_rect.height / 2 - 100
+        self.screen.blit(text, [id_x, id_y])
+        
+        text_input_id = font.render(self.input_id, True, (0,0,0))
+        self.screen.blit(text_input_id, (id_x + 100,id_y))
+
+        id_block = pygame.draw.rect(self.screen, BLACK, [id_x + 90, id_y - 5, 250, 40], 1)
+
+        text = font.render("密碼:", True, BLACK) 
+        text_rect = text.get_rect()
+        pwd_x = self.screen.get_width() / 2 - text_rect.width / 2 - 100
+        pwd_y = self.screen.get_height() / 2 - text_rect.height / 2 - 0
+        self.screen.blit(text, [pwd_x, pwd_y])
+        
+        text_input_pwd = font.render(self.input_pwd, True, (0,0,0))
+        self.screen.blit(text_input_pwd, (pwd_x + 100, pwd_y))
+        pwd_block = pygame.draw.rect(self.screen, BLACK, [pwd_x + 90, pwd_y - 5, 250, 40], 1)
 
 
+        # 按鈕
         button = pygame.Surface((200, 70))
         button.fill(RED)
         button_rect = button.get_rect()
         button_x = self.screen.get_width() / 2 - button_rect.width / 2
         button_y = self.screen.get_height() / 2 - button_rect.height / 2 + 100
-        start_btn = self.screen.blit(button, [button_x, button_y])
+        signin_btn = self.screen.blit(button, [button_x, button_y])
 
         text = font.render("登入", True, BLACK) 
         text_rect = text.get_rect()
@@ -102,7 +133,7 @@ class Game:
         button_rect = button.get_rect()
         button_x = self.screen.get_width() / 2 - button_rect.width / 2
         button_y = self.screen.get_height() / 2 - button_rect.height / 2 + 180
-        start_btn = self.screen.blit(button, [button_x, button_y])
+        signup_btn = self.screen.blit(button, [button_x, button_y])
 
         text2 = font.render("註冊", True, BLACK)
         text2_rect = text2.get_rect()
@@ -114,10 +145,27 @@ class Game:
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 pos = pygame.mouse.get_pos()
 
-                if start_btn.collidepoint(pos):
-                    self.state = 'intro'
+                if signup_btn.collidepoint(pos):
+                    self.state = 'signup'
                     break
+
+                if signin_btn.collidepoint(pos):
+                    print('sign in')
+                    # asdasdasdasasd
+                    break
+
+                if id_block.collidepoint(pos):
+                    print('wtf')
+                    self.input_idpwd = 'id'
+                if pwd_block.collidepoint(pos):
+                    print('wtfx2')
+                    self.input_idpwd = 'pwd'
+
+
         pygame.display.flip()
+
+    def display_sign_up(self):
+        pass
 
 
     def game_logic(self):
@@ -346,16 +394,19 @@ def main():
         if g.done: 
             break
 
-        g.display_sign_in()
-        # if g.state == 'intro':
-        #     g.display_intro()
-        # elif g.state == 'choose':
-        #     g.display_choose()
-        # elif g.state == 'game_over':
-        #     g.display_game_over()
-        # elif g.state == 'play':
-        #     g.game_logic()
-        #     g.display_frame()
+        if g.state == 'signin':
+            g.display_sign_in()
+        elif g.state == 'signup':
+            g.display_sign_up()
+        elif g.state == 'intro':
+            g.display_intro()
+        elif g.state == 'choose':
+            g.display_choose()
+        elif g.state == 'game_over':
+            g.display_game_over()
+        elif g.state == 'play':
+            g.game_logic()
+            g.display_frame()
 
         clock.tick(60)
 
