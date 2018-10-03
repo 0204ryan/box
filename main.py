@@ -39,6 +39,7 @@ class Game:
     def __init__(self, screen, screen_size):
         self.screen = screen
         self.screen_size = screen_size
+        self.events = []
         self.background_sign_in = pygame.image.load("images/background.jpg").convert()
         self.background_game = pygame.image.load("images/background.jpg").convert()
         self.state = 'signin'
@@ -52,7 +53,8 @@ class Game:
         self.restart()
 
     def process_events(self):
-        for event in pygame.event.get():
+        self.events = pygame.event.get()
+        for event in self.events:
             if event.type == pygame.QUIT:
                 self.done = True
             if event.type == pygame.VIDEORESIZE:
@@ -162,7 +164,7 @@ class Game:
         text3 = font3.render(score_max(self.max_score), True, BLACK)
         self.screen.blit(text3, [0, 0])
 
-        for event in pygame.event.get():
+        for event in self.events:
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 pos = pygame.mouse.get_pos()
 
@@ -208,7 +210,7 @@ class Game:
                     self.max_score = self.score
                     self.save_done = True
 
-        for event in pygame.event.get():
+        for event in self.events:
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 pos = pygame.mouse.get_pos()
 
@@ -259,7 +261,7 @@ class Game:
         text2_y = self.screen.get_height() / 2 - text2_rect.height / 2 + 180
         self.screen.blit(text2, [text2_x, text2_y])
 
-        for event in pygame.event.get():
+        for event in self.events:
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 pos = pygame.mouse.get_pos()
 
