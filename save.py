@@ -3,7 +3,8 @@ import pymongo
 
 class Db:
     def __init__(self):
-        self.client = pymongo.MongoClient('mongodb+srv://ryan:fzIapNOmU9oAu2h6@ri-stgev.mongodb.net/test?retryWrites=true')
+        # self.client = pymongo.MongoClient('mongodb+srv://ryan:fzIapNOmU9oAu2h6@ri-stgev.mongodb.net/test?retryWrites=true')
+        self.client = pymongo.MongoClient()
         self.db = self.client.game
 
     def save_score(self, score):
