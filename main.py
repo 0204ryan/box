@@ -2,7 +2,7 @@ import pygame
 import random
 from box import Box
 from player import Player
-from save import Db
+from db import Db
 from heli import Heli
 from pygame.locals import *
 from sign import Sign

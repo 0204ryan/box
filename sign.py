@@ -96,6 +96,11 @@ class Sign:
 
                 if signin_btn.collidepoint(pos):
                     print('sign in')
+                    success = self.g.db.sign_in(self.input_text['id'], self.input_text['pwd'])
+                    if success:
+                        self.g.state = 'intro'
+                    else:
+                        print('sign in failed')
                     break
 
                 if id_block.collidepoint(pos):
@@ -187,6 +192,7 @@ class Sign:
                 pos = pygame.mouse.get_pos()
 
                 if signup_btn.collidepoint(pos):
+                    self.g.db.sign_up(self.input_text['name'], self.input_text['id'], self.input_text['pwd'])
                     self.g.state = 'intro'
                     break
 
