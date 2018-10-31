@@ -46,9 +46,10 @@ class Db:
         user = self.search_user(id)
         if not user:
             print('no user')
-            return False
-
-        if pwd == user['pwd']:
-            return True
-        return False
+            return '查無此帳號'
+            
+        if pwd != user['pwd']:
+            return '密碼錯誤'
+            
+        return ''
 

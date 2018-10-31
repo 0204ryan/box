@@ -65,9 +65,7 @@ class Game:
                 else:
                     self.screen.blit(pygame.transform.scale(self.background_game, self.screen_size), (0, 0))
                 pygame.display.flip()
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_RETURN:
-                    self.state = 'play'
+
 
     def game_logic(self):
         if self.a == 0:

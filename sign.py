@@ -11,6 +11,7 @@ class Sign:
     def __init__(self, game):
         self.g = game
         self.aaa = True
+        self.error_message = ''
         self.screen = self.g.screen
         self.input_type = 'id'
         self.input_text = {
@@ -53,11 +54,12 @@ class Sign:
         pwd_y = self.screen.get_height() / 2 - text_rect.height / 2 - 0
         self.screen.blit(text, [pwd_x, pwd_y])
         
-        text_input_pwd = font.render(self.input_text['pwd'], True, (0,0,0))
+
+        text_input_pwd = font.render(len(self.input_text['pwd']) * '*', True, (0,0,0))
         self.screen.blit(text_input_pwd, (pwd_x + 100, pwd_y))
         pwd_block = pygame.draw.rect(self.screen, BLACK, [pwd_x + 90, pwd_y - 5, 250, 40], 1)
 
-
+            
         # 按鈕
         button = pygame.Surface((200, 70))
         button.fill(RED)
@@ -86,6 +88,14 @@ class Sign:
         text2_y = self.screen.get_height() / 2 - text2_rect.height / 2 + 180
         self.screen.blit(text2, [text2_x, text2_y])
 
+        text2 = font.render(self.error_message, True, RED)
+        text2_rect = text2.get_rect()
+        text2_x = self.screen.get_width() / 2 - text2_rect.width / 2
+        text2_y = self.screen.get_height() / 2 - text2_rect.height / 2 - 100
+        self.screen.blit(text2, [text2_x, text2_y])
+
+
+
         for event in self.g.events:
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 pos = pygame.mouse.get_pos()
@@ -96,11 +106,9 @@ class Sign:
 
                 if signin_btn.collidepoint(pos):
                     print('sign in')
-                    success = self.g.db.sign_in(self.input_text['id'], self.input_text['pwd'])
-                    if success:
+                    self.error_message = self.g.db.sign_in(self.input_text['id'], self.input_text['pwd'])
+                    if not self.error_message: # if len(self.errror_message) == 0
                         self.g.state = 'intro'
-                    else:
-                        print('sign in failed')
                     break
 
                 if id_block.collidepoint(pos):
@@ -109,7 +117,6 @@ class Sign:
                 if pwd_block.collidepoint(pos):
                     print('wtfx2')
                     self.input_type = 'pwd'
-
 
         pygame.display.flip()
 
