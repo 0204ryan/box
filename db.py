@@ -1,6 +1,5 @@
 import pymongo
 
-
 class Db:
     def __init__(self):
         # self.client = pymongo.MongoClient('mongodb+srv://ryan:fzIapNOmU9oAu2h6@ri-stgev.mongodb.net/test?retryWrites=true')
@@ -9,15 +8,18 @@ class Db:
         self.users = self.db.users
         self.scores = self.db.scores
 
-    def save_score(self, score):
+    def save_score(self, score, user):
         d = {
-            'score': score
+            'score': score,
+            'user': user
+            
         }
         self.scores.insert_one(d)
 
-    def read_score(self):
-        data = self.scores.find().sort([('score', -1)]) # data 是一個pymongo物件
+    def read_score(self, user):
+        data = self.scores.find({'user': user}).sort([('score', -1)]) # data 是一個pymongo物件
         for d in data: # 用for loop把物件每筆資料印出來
+            print(d)
             return d['score']
           
         return 0

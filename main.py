@@ -45,7 +45,8 @@ class Game:
         self.state = 'signin'
         self.done = False
         self.db = Db()
-        self.max_score = self.db.read_score()
+        self.user_id = ''
+        self.max_score = 0
         self.asd = 0
         self.player_image = 'helis/ZF0.png'
         # self.user_id = 'Ryan'
@@ -81,6 +82,7 @@ class Game:
             self.s -= 49
 
     def restart(self):
+        print('xd')
         self.save_done = False
         self.game_over = False
         self.score = 0
@@ -91,6 +93,7 @@ class Game:
         self.score_c = 0
         self.s_accelerate = 0.1
         self.ccccc = 0
+        self.max_score = self.db.read_score(self.user_id)
         self.player_group = pygame.sprite.Group()
         self.box_group = pygame.sprite.Group()
         self.player = Player(0, 0, self.player_image, self.screen)
@@ -204,7 +207,7 @@ class Game:
         self.screen.blit(text3, [0, 0])
         if not self.save_done:
                 if self.score > self.max_score:
-                    self.db.save_score(self.score)
+                    self.db.save_score(self.score, self.user_id)
                     self.max_score = self.score
                     self.save_done = True
 

@@ -109,6 +109,8 @@ class Sign:
                     self.error_message = self.g.db.sign_in(self.input_text['id'], self.input_text['pwd'])
                     if not self.error_message: # if len(self.errror_message) == 0
                         self.g.state = 'intro'
+                        self.g.user_id = self.input_text['id']
+                        self.g.restart()
                     break
 
                 if id_block.collidepoint(pos):
